@@ -1,10 +1,10 @@
 canvas = document.getElementById('canvas').getContext("2d");
-
+fish = new Fish(10, 150, 10, 10, "img/fish.jpg", 3);
 
 function Update()
 {
-    canvas.fillStyle = '#000000';
-    canvas.fillRect (0, 0, 300, 200);
+    fish.Update();
+    fish.draw();
 }
 
 setInterval(Update, 20);

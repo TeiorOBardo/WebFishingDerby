@@ -15,7 +15,7 @@ class Obj
     {
         var img = new Image();
         img.src = this.image;
-        pincel.drawImage(img, this.x, this.y, this.width, this.height);
+        canvas.drawImage(img, this.x, this.y, this.width, this.height);
     }
 
     animation(name)
@@ -31,5 +31,29 @@ class Obj
             this.frame = 1;
         }
         this.image = "img/" + name + this.frame + ".png";
+    }
+}
+
+class Fish extends Obj
+{
+    direction = 1;
+    moveInterval = 4;
+    limit = 300;
+    border = 5;
+    timer = 0;
+
+    Update()
+    {
+        this.timer += 1;
+        if(this.timer >= this.moveInterval)
+        {
+            this.timer = 0;
+            if((this.x > this.limit-this.border) && (this.direction > 0) ||
+               (this.x < this.border) && (this.direction < 0))
+            {
+                this.direction *= -1;
+            }
+            this.x += 1 * this.direction;
+        }
     }
 }
