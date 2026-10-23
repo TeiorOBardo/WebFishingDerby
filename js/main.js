@@ -6,6 +6,7 @@ function Update()
     canvas.clearRect(0, 0, 300, 200);
     fish.Update();
     fish.draw();
+    fish.animation("fish");
     
 }
 

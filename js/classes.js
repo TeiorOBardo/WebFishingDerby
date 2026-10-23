@@ -1,7 +1,7 @@
 class Obj
 {
     frame = 1;
-    timer = 0;
+    animTimer = 0;
     constructor(x, y, width, height, image, animDuration)
     {
         this.x = x;
@@ -9,6 +9,7 @@ class Obj
         this.width = width;
         this.height = height;
         this.image = image;
+        this.flipped = false;
         this.animDuration = animDuration
     }
     draw ()
@@ -20,17 +21,27 @@ class Obj
 
     animation(name)
     {
-        this.timer += 1;
-        if(this.timer > 10)
+        this.animTimer += 1;
+        console.log(this.animTimer);
+        if(this.animTimer > 10)
         {
-            this.timer = 0;
+            console.log("reset");
+            this.animTimer = 0;
             this.frame += 1;
         }
+        console.log(this.animTimer);
         if(this.frame > this.animDuration-1)
         {
             this.frame = 1;
         }
-        this.image = "img/" + name + this.frame + ".png";
+        if(this.flipped)
+        {
+            this.image = "img/" + name + "_" + this.frame + "_flip" + ".png";
+        }
+        else
+        {
+            this.image = "img/" + name + "_" + this.frame + ".png";
+        }
     }
 }
 
@@ -39,7 +50,7 @@ class Fish extends Obj
     direction = 1;
     moveInterval = 4;
     limit = 300;
-    border = 5;
+    border = 20;
     timer = 0;
 
     Update()
@@ -52,6 +63,7 @@ class Fish extends Obj
                (this.x < this.border) && (this.direction < 0))
             {
                 this.direction *= -1;
+                this.flipped = !this.flipped;
             }
             this.x += 1 * this.direction;
         }
