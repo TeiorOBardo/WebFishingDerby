@@ -7,4 +7,16 @@ canvas
     margin-right: auto;
     display: block;
     image-rendering: pixelated;
+    background-color: #7382f7;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    background-color: #292929;
+}
+
+h1{
+    color: #ffffff;
+    text-align: center;
 }
