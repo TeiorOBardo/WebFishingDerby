@@ -45,6 +45,66 @@ class Obj
     }
 }
 
+class Wave extends Obj{ // tá hardcoded mas essa é era a forma mais fácil de fazer :P
+    frame = 0
+    animTimer = 0
+    
+    animation()
+    {
+        this.animTimer += 1;
+        //console.log(this.animTimer);
+        if(this.animTimer > 10)
+        {
+            //console.log("reset");
+            this.animTimer = 0;
+            this.frame += 1;
+        }
+        //console.log(this.animTimer);
+        if(this.frame > this.animDuration-1)
+        {
+            this.frame = 0;
+        }
+        if(this.flipped)
+        {
+            this.image = "img/wave/" + this.frame + "_flip" + ".png";
+        }
+        else
+        {
+            this.image = "img/wave/" + this.frame + ".png";
+        }
+    }
+}
+
+class FrontWave extends Obj{ // tá hardcoded mas essa é era a forma mais fácil de fazer :P
+    frame = 0
+    animTimer = 0
+    
+    animation()
+    {
+        this.animTimer += 1;
+        //console.log(this.animTimer);
+        if(this.animTimer > 10)
+        {
+            //console.log("reset");
+            this.animTimer = 0;
+            this.frame += 1;
+        }
+        //console.log(this.animTimer);
+        if(this.frame > this.animDuration-1)
+        {
+            this.frame = 0;
+        }
+        if(this.flipped)
+        {
+            this.image = "img/front_wave/" + this.frame + "_flip" + ".png";
+        }
+        else
+        {
+            this.image = "img/front_wave/" + this.frame + ".png";
+        }
+    }
+}
+
 class Fish extends Obj
 {
     direction = 1;

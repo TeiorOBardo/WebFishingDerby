@@ -29,6 +29,8 @@ var player1 = {
 var fish = new Fish(10, 150, 16, 10, "img/fish_1.png", 3);
 var dock1 = new Obj(0,66,40,134,"img/dock.png")
 var dock2 = new Obj(260,66,40,134,"img/dock.png")
+var wave = new Wave(0, 71, 299, 9, "img/wave/0.png", 42)
+var frontwave = new FrontWave(0, 80, 299, 7, "img/front_wave/0.png", 42)
 
 function DrawBackgroundWater(){
     canvas.fillStyle = "#1818a5"
@@ -76,19 +78,23 @@ function Update()
 
     DrawBackgroundWater() // desenha o fundo
 
-    canvas.fillStyle = "black"//'#000000'
-    canvas.fillRect(player1.varaX, player1.varaY, 3, 3)
-
-    canvas.fillStyle = "red"//'#000000'
-    canvas.fillRect(player1.varaX, player1.pointY, 3, 3)
-    canvas.fill()
-
     fish.Update();
     fish.draw();
     fish.animation("fish");
 
-    dock1.draw();
-    dock2.draw();
+    wave.animation()
+    frontwave.animation()
+    wave.draw();
+    dock1.draw(); // desenha uma doca no cenário
+    dock2.draw(); // desenha uma doca no cenário
+    frontwave.draw()
+
+    canvas.fillStyle = "black"//'#000000'
+    canvas.fillRect(player1.varaX, player1.varaY, 3, 3) // desenha posição vara de pesca
+
+    canvas.fillStyle = "red"//'#000000'
+    canvas.fillRect(player1.varaX, player1.pointY, 3, 3) // desenha posição anzol
+    canvas.fill()
 }
 
 setInterval(Update, 20);
