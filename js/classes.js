@@ -22,14 +22,14 @@ class Obj
     animation(name)
     {
         this.animTimer += 1;
-        console.log(this.animTimer);
+        //console.log(this.animTimer);
         if(this.animTimer > 10)
         {
-            console.log("reset");
+            //console.log("reset");
             this.animTimer = 0;
             this.frame += 1;
         }
-        console.log(this.animTimer);
+        //console.log(this.animTimer);
         if(this.frame > this.animDuration-1)
         {
             this.frame = 1;
