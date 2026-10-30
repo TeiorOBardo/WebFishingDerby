@@ -41,6 +41,15 @@ var dock2 = new Obj(260,66,40,134,"img/dock.png")
 var wave = new Wave(0, 71, 299, 9, "img/wave/0.png", 42)
 var frontwave = new FrontWave(0, 80, 299, 7, "img/front_wave/0.png", 42)
 
+var grabfish_plr1 = new Audio('/sfx/grabfish_plr1.wav');
+var grabfish_plr2 = new Audio('/sfx/grabfish_plr2.wav');
+var plr1_point = new Audio('/sfx/plr1_point.wav');
+var plr2_point = new Audio('/sfx/plr2_point.wav');
+var sharkbite = new Audio('/sfx/sharkbite.wav');
+var ambience = new Audio('/sfx/ambience.wav');
+ambience.loop = true
+ambience.play()
+
 fishes.forEach(function(fish){
     if(Math.random() < 0.5)
     {
@@ -68,7 +77,8 @@ var player1 = {
     pointY: min_point,
     startVaraX: 20,
     grabbing : false,
-    grabbedFish : fishes[0]
+    grabbedFish : fishes[0],
+    id: 1
 }
 
 var player2 = {
@@ -81,7 +91,8 @@ var player2 = {
     pointY: min_point,
     startVaraX: canvasX-20,
     grabbing : false,
-    grabbedFish : fishes[0]
+    grabbedFish : fishes[0],
+    id: 2
 }
 
 var players = [player1, player2];
@@ -185,6 +196,12 @@ function CheckCollision(player, fish)
 {
     if((Math.abs(player.varaX - (fish.x + fish.mouthX)) <= grabDistance)&&(Math.abs(player.pointY - (fish.y + fish.mouthY)) <= grabDistance))
     {
+        if(player.id == 1){
+            grabfish_plr1.play()
+        }
+        if(player.id == 2){
+            grabfish_plr2.play()
+        }
         player.grabbing = true;
         player.grabbedFish = fish;
         fish.isGrabbed = true;
@@ -194,6 +211,7 @@ function CheckCollisionShark(player, fish)
 {
     if((Math.abs(player.varaX - (fish.x + fish.mouthX)) <= grabDistance/2)&&(Math.abs(player.pointY - (fish.y + fish.mouthY)) <= grabDistance/2))
     {
+        sharkbite.play()
         player.grabbing = false;
         player.grabbedFish.y = player.grabbedFish.startY;
         player.grabbedFish.x = RandomFishX();
@@ -256,6 +274,12 @@ function Update()
             CheckCollisionShark(player, shark);
             if((player.varaX < player.minVara-6)||(player.varaX > player.maxVara+6))
             {
+                if(player.id == 1){
+                    plr1_point.play()
+                }
+                if(player.id == 2){
+                    plr2_point.play()
+                }
                 player.grabbing = false;
                 player.grabbedFish.y = player.grabbedFish.startY;
                 player.grabbedFish.x = RandomFishX();
@@ -264,6 +288,12 @@ function Update()
         }
         if(player.grabbing && player.grabbedFish.y < 80)
         {
+            if(player.id == 1){
+                    plr1_point.play()
+                }
+                if(player.id == 2){
+                    plr2_point.play()
+                }
             player.score += player.grabbedFish.score;
             if(player.score >= max_score)
             {
