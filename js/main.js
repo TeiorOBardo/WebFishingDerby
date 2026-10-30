@@ -13,16 +13,6 @@ var input = {
     Down : false
 }
 
-min_point = 33
-max_point = canvasY-3
-vara_movement_multiplier = 6
-point_movement_multiplier = 3
-max_score = 10;
-grabDistance = 10;
-
-
-
-
 function RandomFishX()
 {
     return ~~(25 + Math.random() * (canvasX-50))
@@ -36,10 +26,14 @@ var fish5 = new Fish(RandomFishX(), 125, 16, 10, "img/fish_1.png", 3);
 var fish6 = new Fish(RandomFishX(), 110, 16, 10, "img/fish_1.png", 3);
 var shark = new Fish(RandomFishX(), 95, 70, 13, "img/shark_1.png", 3);
 var fishes = [fish1, fish2, fish3, fish4, fish5, fish6];
+
 var dock1 = new Obj(0,66,40,134,"img/dock.png")
 var dock2 = new Obj(260,66,40,134,"img/dock.png")
 var wave = new Wave(0, 71, 299, 9, "img/wave/0.png", 42)
 var frontwave = new FrontWave(0, 80, 299, 7, "img/front_wave/0.png", 42)
+
+var playermodel_1 = new Obj(2,33,32,33,"img/player1.png")
+var playermodel_2 = new Obj(266,33,32,33,"img/player2.png")
 
 var grabfish_plr1 = new Audio('/sfx/grabfish_plr1.wav');
 var grabfish_plr2 = new Audio('/sfx/grabfish_plr2.wav');
@@ -67,12 +61,19 @@ shark.startMouthX = 77;
 shark.mouthX = 77;
 
 
+min_point = 58
+max_point = canvasY-3
+vara_movement_multiplier = 6
+point_movement_multiplier = 3
+max_score = 10;
+grabDistance = 10;
+
 var player1 = {
     score: 0,
-    minVara: 30,
-    maxVara: canvasX/2,
-    varaX: 30, // 100
-    varaY: 33,
+    minVara: 50,
+    maxVara: (canvasX/2)-3,
+    varaX: 50, // 100
+    varaY: 48,
     pointX: 0,
     pointY: min_point,
     startVaraX: 20,
@@ -83,10 +84,10 @@ var player1 = {
 
 var player2 = {
     score: 0,
-    minVara: canvasX/2,
-    maxVara: canvasX-30,
-    varaX: canvasX-30, // 100
-    varaY: 33,
+    minVara: (canvasX/2)+3,
+    maxVara: canvasX-50,
+    varaX: canvasX-50, // 100
+    varaY: 48,
     pointX: 0,
     pointY: min_point,
     startVaraX: canvasX-20,
@@ -244,6 +245,10 @@ function Update()
     wave.animation()
     frontwave.animation()
     wave.draw();
+
+    playermodel_1.draw()
+    playermodel_2.draw()
+
     dock1.draw(); // desenha uma doca no cenário
     dock2.draw(); // desenha uma doca no cenário
     frontwave.draw()
