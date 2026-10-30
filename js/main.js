@@ -303,6 +303,9 @@ var loopId2 = setInterval(PlayerMovementCheck, 100);
 
 document.addEventListener("keydown", function (e){
     // WASD Controls
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
+        e.preventDefault();
+    }
     if(e.key == "w" || e.key == "W"){ input.W = true }
     if(e.key == "a" || e.key == "A"){ input.A = true }
     if(e.key == "s" || e.key == "S"){ input.S = true }

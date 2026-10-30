@@ -1,22 +1,311 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/page.css">
-    <title>Fishing Derby</title>
-</head>
-<body>
-    <header>
-        <h1>Fishing Derby!</h1>
-    </header>
-    <div>
-    </div>
-    <section>
+    <title>Fishing Derby (1980) - Atari 2600 Retro Showcase</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Press Start 2P & VT323 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-    </section>
-        <canvas id="canvas" width="300" height="200"></canvas>
-        <script src="js/classes.js" charset="utf-8"></script>
-        <script src="js/main.js" charset="utf-8"></script>
+    <style>
+        /* Retro Typography Rules */
+        .font-pixel {
+            font-family: 'Press Start 2P', monospace;
+        }
+        .font-vt {
+            font-family: 'VT323', monospace;
+        }
+        .font-sans-body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Classic Activision Rainbow Stripe */
+        .activision-stripe-h {
+            background: linear-gradient(90deg, 
+                #e52521 0% 16.66%, 
+                #f36f21 16.66% 33.33%, 
+                #fec20f 33.33% 50%, 
+                #2ca03e 50% 66.66%, 
+                #0099da 66.66% 83.33%, 
+                #1e429f 83.33% 100%);
+        }
+
+        .activision-stripe-v {
+            background: linear-gradient(180deg, 
+                #e52521 0% 16.66%, 
+                #f36f21 16.66% 33.33%, 
+                #fec20f 33.33% 50%, 
+                #2ca03e 50% 66.66%, 
+                #0099da 66.66% 83.33%, 
+                #1e429f 83.33% 100%);
+        }
+
+        /* Scanlines Overlay effect for CRT Frame */
+        .crt-overlay {
+            position: relative;
+        }
+        .crt-overlay::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            border-radius: inherit;
+            z-index: 10;
+        }
+
+        /* Mandatory Canvas Styling */
+        canvas.game-canvas-screen {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            background-color: #7382f7;
+            width: 70vw;
+            max-width: 920px;
+            height: auto;
+            aspect-ratio: 3 / 2;
+            display: block;
+            margin: 0 auto;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Woodgrain texture simulation for retro TV casing */
+        .tv-cabinet {
+            background: #1c1510;
+            background-image: 
+                radial-gradient(ellipse at 50% 50%, rgba(55, 38, 25, 0.8) 0%, rgba(15, 10, 7, 0.95) 100%),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.2) 2px, rgba(0,0,0,0.2) 4px);
+            border: 4px solid #3d291a;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(115, 130, 247, 0.15);
+        }
+
+        /* Neon Glow Effect */
+        .text-glow {
+            text-shadow: 0 0 10px rgba(254, 194, 15, 0.7), 0 0 20px rgba(243, 111, 33, 0.5);
+        }
+
+        .blue-glow {
+            text-shadow: 0 0 10px rgba(115, 130, 247, 0.8);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f111a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a2e45;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b4263;
+        }
+    </style>
+</head>
+<body class="bg-[#0b0c10] text-gray-200 font-sans-body min-h-screen flex flex-col justify-between selection:bg-yellow-400 selection:text-black">
+
+    <!-- Top Activision Rainbow Accent Line -->
+    <div class="activision-stripe-h h-2 w-full"></div>
+
+    <!-- Header / Title Banner -->
+    <header class="w-full pt-8 pb-6 px-4 text-center border-b border-gray-800/80 bg-[#0f111a]/90 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto flex flex-col items-center">
+            
+            <!-- Atari Cartridge Badge -->
+            <div class="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded bg-gray-900 border border-gray-700 text-xs font-pixel text-yellow-400 tracking-wider">
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                ATARI 2600 CARTRIDGE • 1980
+            </div>
+
+            <!-- Main Title -->
+            <h1 class="text-3xl md:text-5xl lg:text-6xl font-pixel text-yellow-400 text-glow tracking-tight leading-tight my-2">
+                FISHING DERBY
+            </h1>
+            
+            <!-- Subtitle -->
+            <p class="font-vt text-2xl md:text-3xl text-cyan-400 tracking-widest uppercase mt-1">
+                Desenvolvido por David Crane • Activision
+            </p>
+
+            <!-- Decorative Rainbow Line Under Title -->
+            <div class="activision-stripe-h h-1.5 w-48 mt-4 rounded-full"></div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-6xl mx-auto px-4 py-10 flex-grow w-full space-y-12">
+
+        <!-- History & Concept Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Column 1: History -->
+            <div class="bg-[#131622] border border-gray-800 rounded-xl p-6 shadow-lg hover:border-yellow-500/40 transition-colors">
+                <div class="flex items-center gap-3 mb-4 border-b border-gray-800 pb-3">
+                    <div class="w-3 h-6 activision-stripe-v rounded-sm"></div>
+                    <h2 class="font-pixel text-lg text-yellow-400">História do Clássico</h2>
+                </div>
+                <p class="text-gray-300 leading-relaxed mb-4 text-sm md:text-base">
+                    Lançado em <strong class="text-white">1980</strong>, <span class="text-cyan-300 font-semibold">Fishing Derby</span> foi um dos primeiros títulos criados pela lendária <strong class="text-white">Activision</strong> para o console Atari 2600.
+                </p>
+                <p class="text-gray-300 leading-relaxed text-sm md:text-base">
+                    Projetado pelo renomado programador <strong class="text-yellow-300">David Crane</strong> (criador de <em>Pitfall!</em>), o jogo se destacou por seus gráficos coloridos, física de pesca surpreendentemente fluida e animações expressivas para a época, tornando-se um marco da era dos 8-bits.
+                </p>
+            </div>
+
+            <!-- Column 2: Mechanics -->
+            <div class="bg-[#131622] border border-gray-800 rounded-xl p-6 shadow-lg hover:border-cyan-500/40 transition-colors">
+                <div class="flex items-center gap-3 mb-4 border-b border-gray-800 pb-3">
+                    <div class="w-3 h-6 activision-stripe-v rounded-sm"></div>
+                    <h2 class="font-pixel text-lg text-cyan-400">Regras e Dinâmica</h2>
+                </div>
+                <p class="text-gray-300 leading-relaxed mb-3 text-sm md:text-base">
+                    Dois pescadores sentam-se em trapiches opostos sobre a água. O grande objetivo é ser o primeiro a pescar um total de <strong class="text-yellow-400 font-pixel text-xs">99 LIBRAS</strong> de peixe.
+                </p>
+                <ul class="space-y-2 text-sm text-gray-300">
+                    <li class="flex items-start gap-2">
+                        <span class="text-yellow-400 font-bold">►</span>
+                        <span>Peixes nadam em 6 profundidades diferentes (pesando de 1 a 6 libras).</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-yellow-400 font-bold">►</span>
+                        <span>Quanto mais fundo o peixe estiver, maior o seu peso e valor!</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-red-400 font-bold">►</span>
+                        <span><strong class="text-red-400">Cuidado com o Tubarão:</strong> Ele ronda a superfície e devorará o peixe fisgado se passar no momento exato.</span>
+                    </li>
+                </ul>
+            </div>
+
+        </section>
+
+        <!-- Gameplay Mechanics & 2-Player Focus Banner -->
+        <section class="bg-gradient-to-r from-blue-950/40 via-[#131622] to-indigo-950/40 border border-blue-800/40 rounded-xl p-6 md:p-8 text-center relative overflow-hidden">
+            <div class="max-w-3xl mx-auto space-y-3">
+                <span class="inline-block px-3 py-1 bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 font-pixel text-xs rounded">
+                    MODO DE JOGO
+                </span>
+                <h3 class="font-pixel text-xl md:text-2xl text-white tracking-wide">
+                    Duelo Direto: 2 Jogadores Local
+                </h3>
+                <p class="text-gray-300 text-sm md:text-base leading-relaxed">
+                    Fishing Derby foi feito para a pura rivalidade entre amigos. Dois jogadores competem lado a lado no mesmo console em tempo real. Quem tiver os reflexos mais rápidos e souber esquivar do tubarão faminto conquistará a vitória!
+                </p>
+            </div>
+        </section>
+
+        <!-- Controls Guide -->
+        <section class="bg-[#131622] border border-gray-800 rounded-xl p-6 shadow-lg">
+            <h2 class="font-pixel text-center text-lg text-yellow-400 mb-6 uppercase tracking-widest">
+                Guia de Controles (Joystick Atari)
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Player 1 -->
+                <div class="bg-[#0b0c10] p-5 rounded-lg border border-red-500/30">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-pixel text-red-400 text-sm">JOGADOR 1</span>
+                        <span class="text-xs bg-red-950 text-red-300 border border-red-800 px-2 py-0.5 rounded font-vt">TRAPICHE ESQUERDO</span>
+                    </div>
+                    <ul class="text-sm space-y-2 text-gray-300 font-vt text-lg">
+                        <li><strong class="text-white">Alavanca (Esq/Dir):</strong> Move a linha de pesca</li>
+                        <li><strong class="text-white">Alavanca (Cima/Baixo):</strong> Ajusta a profundidade do anzol</li>
+                    </ul>
+                </div>
+
+                <!-- Player 2 -->
+                <div class="bg-[#0b0c10] p-5 rounded-lg border border-yellow-500/30">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-pixel text-yellow-400 text-sm">JOGADOR 2</span>
+                        <span class="text-xs bg-yellow-950 text-yellow-300 border border-yellow-800 px-2 py-0.5 rounded font-vt">TRAPICHE DIREITO</span>
+                    </div>
+                    <ul class="text-sm space-y-2 text-gray-300 font-vt text-lg">
+                        <li><strong class="text-white">Alavanca (Esq/Dir):</strong> Move a linha de pesca</li>
+                        <li><strong class="text-white">Alavanca (Cima/Baixo):</strong> Ajusta a profundidade do anzol</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- MAIN SHOWCASE SECTION: Retro TV Canvas Container -->
+        <section class="pt-6 pb-4">
+            
+            <div class="text-center mb-6">
+                <span class="font-pixel text-xs text-cyan-400 tracking-widest uppercase block mb-1">
+                    [ TELA OFICIAL DO JOGO ]
+                </span>
+                <h2 class="font-pixel text-2xl md:text-3xl text-white tracking-wide">
+                    ARENA FISHING DERBY
+                </h2>
+                <p class="text-gray-400 text-xs md:text-sm mt-2">
+                    Visualização em proporção nativa da tela retro
+                </p>
+            </div>
+
+            <!-- Arcade Cabinet / Retro TV Enclosure (Occupies prominent screen space) -->
+            <div class="tv-cabinet rounded-2xl p-4 md:p-8 max-w-5xl mx-auto crt-overlay">
+                
+                <!-- TV Header Trim -->
+                <div class="flex items-center justify-between mb-4 px-2 border-b border-yellow-900/40 pb-2">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-600 shadow-[0_0_8px_#ef4444]"></div>
+                        <span class="font-pixel text-[10px] text-gray-400 tracking-wider">POWER ON</span>
+                    </div>
+                    
+                    <div class="font-pixel text-[10px] text-yellow-500/80 tracking-widest hidden sm:block">
+                        ACTIVISION VIDEO DISPLAY • COLOR TV
+                    </div>
+
+                    <div class="text-xs font-vt text-gray-400">
+                        CH 3
+                    </div>
+                </div>
+
+                <!-- CANVAS FRAME (Screen Bezel) -->
+                <div class="bg-black p-3 md:p-6 rounded-xl border-4 border-gray-900 shadow-2xl relative overflow-hidden flex justify-center items-center">
+                    
+                    <!-- THE CANVAS ELEMENT (300 x 200 native resolution, occupying ~70vw visually) -->
+                    <canvas 
+                        id="canvas" 
+                        class="game-canvas-screen rounded" 
+                        width="300" 
+                        height="200"
+                        aria-label="Atari Fishing Derby Game Canvas">
+                    </canvas>
+
+                </div>
+
+                <!-- TV Bottom Controls Panel Decorative Trim -->
+                <div class="mt-4 pt-3 border-t border-yellow-900/40 flex items-center justify-between px-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 border border-gray-600 shadow-md"></div>
+                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 border border-gray-600 shadow-md"></div>
+                    </div>
+                    <div class="font-pixel text-[9px] text-gray-500">
+                        MODEL AG-004
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-[#08090d] border-t border-gray-800/80 py-6 px-4 text-center text-xs text-gray-500 font-vt text-base">
+        <div class="max-w-6xl mx-auto space-y-2">
+            <p>Fishing Derby é uma marca registrada de 1980 da Activision Publishing, Inc.</p>
+            <p class="text-gray-600 text-sm">Página demonstrativa temática estilo Atari 2600.</p>
+        </div>
+    </footer>
+    <script src="js/classes.js" charset="utf-8"></script>
+    <script src="js/main.js" charset="utf-8"></script>
 </body>
 </html>
