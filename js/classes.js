@@ -117,7 +117,7 @@ class Fish extends Obj
     mouthX = this.startMouthX;
     mouthY = 5;
     speed = 1;
-    score = 6;
+    score = 2;
     isGrabbed = false;
 
     Update()

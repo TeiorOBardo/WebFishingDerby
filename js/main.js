@@ -10,15 +10,14 @@ var input = {
     Up: false,
     Lelt : false,
     Right : false,
-    Down : false,
+    Down : false
 }
 
-min_vara = 30
-max_vara = canvasX/2
 min_point = 33
 max_point = canvasY-3
 vara_movement_multiplier = 6
 point_movement_multiplier = 3
+max_score = 10;
 grabDistance = 10;
 
 
@@ -51,13 +50,19 @@ fishes.forEach(function(fish){
     fish.flipped = !fish.flipped;
     fish.mouthX = fish.startMouthX - fish.mouthX;
 })
+fish3.score = 4;
+fish4.score = 4;
+fish1.score = 6;
+fish2.score = 6;
 shark.startMouthX = 77;
 shark.mouthX = 77;
 
 
 var player1 = {
     score: 0,
-    varaX: min_vara, // 100
+    minVara: 30,
+    maxVara: canvasX/2,
+    varaX: 30, // 100
     varaY: 33,
     pointX: 0,
     pointY: min_point,
@@ -68,10 +73,12 @@ var player1 = {
 
 var player2 = {
     score: 0,
-    varaX: max_vara, // 100
+    minVara: canvasX/2,
+    maxVara: canvasX-30,
+    varaX: canvasX-30, // 100
     varaY: 33,
     pointX: 0,
-    pointY: max_point,
+    pointY: min_point,
     startVaraX: canvasX-20,
     grabbing : false,
     grabbedFish : fishes[0]
@@ -90,15 +97,15 @@ function DrawBackgroundWater(){
 function PlayerMovementCheck(){
     // Vara
     if(input.D){ // D
-        if(player1.varaX+(1*vara_movement_multiplier) >= max_vara){
-            player1.varaX = max_vara
+        if(player1.varaX+(1*vara_movement_multiplier) >= player1.maxVara){
+            player1.varaX = player1.maxVara
         }else{
             player1.varaX = player1.varaX+(1*vara_movement_multiplier)
         }
     }
     else if(input.A){ // A
-        if(player1.varaX-(1*vara_movement_multiplier) <= min_vara){
-            player1.varaX = min_vara
+        if(player1.varaX-(1*vara_movement_multiplier) <= player1.minVara){
+            player1.varaX = player1.minVara
         }else{
             player1.varaX = player1.varaX-(1*vara_movement_multiplier)
         }
@@ -117,6 +124,37 @@ function PlayerMovementCheck(){
             player1.pointY = min_point
         }else{
             player1.pointY = player1.pointY-(1*point_movement_multiplier)
+        }
+    }
+
+    if(input.Right){ // D
+        if(player2.varaX+(1*vara_movement_multiplier) >= player2.maxVara){
+            player2.varaX = player2.maxVara
+        }else{
+            player2.varaX = player2.varaX+(1*vara_movement_multiplier)
+        }
+    }
+    else if(input.Left){ // A
+        if(player2.varaX-(1*vara_movement_multiplier) <= player2.minVara){
+            player2.varaX = player2.minVara
+        }else{
+            player2.varaX = player2.varaX-(1*vara_movement_multiplier)
+        }
+    }
+
+    // Point
+    if(input.Down){ // S
+        if(player2.pointY+(1*point_movement_multiplier) >= max_point){
+            player2.pointY = max_point
+        }else{
+            player2.pointY = player2.pointY+(1*point_movement_multiplier)
+        }
+    }
+    else if(input.Up){ // W
+        if(player2.pointY-(1*point_movement_multiplier) <= min_point){
+            player2.pointY = min_point
+        }else{
+            player2.pointY = player2.pointY-(1*point_movement_multiplier)
         }
     }
 }
@@ -156,10 +194,10 @@ function CheckCollisionShark(player, fish)
 {
     if((Math.abs(player.varaX - (fish.x + fish.mouthX)) <= grabDistance/2)&&(Math.abs(player.pointY - (fish.y + fish.mouthY)) <= grabDistance/2))
     {
-        player1.grabbing = false;
-        player1.grabbedFish.y = player1.grabbedFish.startY;
-        player1.grabbedFish.x = RandomFishX();
-        player1.grabbedFish.isGrabbed = false;
+        player.grabbing = false;
+        player.grabbedFish.y = player.grabbedFish.startY;
+        player.grabbedFish.x = RandomFishX();
+        player.grabbedFish.isGrabbed = false;
     }
 }
 
@@ -179,7 +217,7 @@ function Update()
         fish.animation("fish");
     } );
 
-    shark.speed = player1.grabbing ? 9 : 3;
+    shark.speed = (player1.grabbing || player2.grabbing) ? 9 : 3;
         
     shark.Update();
     shark.draw();
@@ -195,47 +233,73 @@ function Update()
     //canvas.fillStyle = "black"//'#000000'
     //canvas.fillRect(player1.varaX, player1.varaY, 3, 3) // desenha posição vara de pesca
 
-    DrawPlayer(player1)
-    if(!player1.grabbing)
-    {
-        fishes.forEach(function(fish){
-        if(!fish.isGrabbed)
+    players.forEach(function(player){
+        DrawPlayer(player)
+    }) 
+    players.forEach(function(player){
+        if(!player.grabbing )
         {
-            CheckCollision(player1, fish)
-        }
-    } );
-    
-    }
-    if(player1.grabbing)
-    {
-        player1.varaX += Math.random() < 0.5 ? 1 : -1;
-        CheckCollisionShark(player1, shark);
-        if((player1.varaX < 23)||(player1.varaX > (canvasX/2 + 7)))
-        {
-            player1.grabbing = false;
-            player1.grabbedFish.y = player1.grabbedFish.startY;
-            player1.grabbedFish.x = RandomFishX();
-            player1.grabbedFish.isGrabbed = false;
-        }
-    }
-    if(player1.grabbing && player1.grabbedFish.y < 80)
-    {
-        player1.score += player1.grabbedFish.score;
-        player1.grabbing = false;
-        player1.grabbedFish.y = player1.grabbedFish.startY;
-        player1.grabbedFish.x = RandomFishX();
-        player1.grabbedFish.isGrabbed = false;
-    }
+            fishes.forEach(function(fish){
+            if(!fish.isGrabbed)
+            {
+                CheckCollision(player, fish)
+            }
+        } );
+        }  
+    })
 
-    //canvas.fillStyle = "red"//'#000000'
-    //canvas.fillRect(player1.varaX, player1.pointY, 3, 3) // desenha posição anzol
-    //canvas.fill()
+
+    players.forEach(function(player){
+        if(player.grabbing)
+        {
+            player.varaX += Math.random() < 0.5 ? 1 : -1;
+            CheckCollisionShark(player, shark);
+            if((player.varaX < player.minVara-6)||(player.varaX > player.maxVara+6))
+            {
+                player.grabbing = false;
+                player.grabbedFish.y = player.grabbedFish.startY;
+                player.grabbedFish.x = RandomFishX();
+                player.grabbedFish.isGrabbed = false;
+            }
+        }
+        if(player.grabbing && player.grabbedFish.y < 80)
+        {
+            player.score += player.grabbedFish.score;
+            if(player.score >= max_score)
+            {
+                EndGame();
+            }
+            player.grabbing = false;
+            player.grabbedFish.y = player.grabbedFish.startY;
+            player.grabbedFish.x = RandomFishX();
+            player.grabbedFish.isGrabbed = false;
+        }
+    })
+
+    canvas.fillStyle = "red"//'#000000'
+    canvas.fillRect(0, 0, player1.score/max_score*canvasX/2, 10) // desenha posição anzol
+    canvas.fill()
+
+    canvas.fillStyle = "green"//'#000000'
+    canvas.fillRect(canvasX - player2.score/max_score*canvasX/2, 0, canvasX, 10) // desenha posição anzol
+    canvas.fill()
+
+
+}
+
+function EndGame()
+{
+    clearInterval(loopId1, )
+    clearInterval(loopId2)
+    canvas.font = "12px serif";
+    var winner = (player1.score > player2.score)? 1 : 2
+    canvas.fillStyle = winner == 1 ? "red" : "green"
+    canvas.fillText("GAME OVER! Player " + winner + " WON", 80, 120);
 }
 
 
-
-setInterval(Update, 20);
-setInterval(PlayerMovementCheck, 100);
+var loopId1 = setInterval(Update, 20);
+var loopId2 = setInterval(PlayerMovementCheck, 100);
 
 document.addEventListener("keydown", function (e){
     // WASD Controls
@@ -245,10 +309,10 @@ document.addEventListener("keydown", function (e){
     if(e.key == "d" || e.key == "D"){ input.D = true }
 
     // Arrow Key Controls (Separate inputs)
-    if(e.key == "ArrowUp"){ input.ArrowUp = true }
-    if(e.key == "ArrowLeft"){ input.ArrowLeft = true }
-    if(e.key == "ArrowDown"){ input.ArrowDown = true }
-    if(e.key == "ArrowRight"){ input.ArrowRight = true }
+    if(e.key == "ArrowUp"){ input.Up = true }
+    if(e.key == "ArrowLeft"){ input.Left = true }
+    if(e.key == "ArrowDown"){ input.Down = true }
+    if(e.key == "ArrowRight"){ input.Right = true }
 })
 
 document.addEventListener("keyup", function (e){
@@ -259,8 +323,8 @@ document.addEventListener("keyup", function (e){
     if(e.key == "d" || e.key == "D"){ input.D = false }
 
     // Arrow Key Controls (Separate inputs)
-    if(e.key == "ArrowUp"){ input.ArrowUp = false }
-    if(e.key == "ArrowLeft"){ input.ArrowLeft = false }
-    if(e.key == "ArrowDown"){ input.ArrowDown = false }
-    if(e.key == "ArrowRight"){ input.ArrowRight = false }
+    if(e.key == "ArrowUp"){ input.Up = false }
+    if(e.key == "ArrowLeft"){ input.Left = false }
+    if(e.key == "ArrowDown"){ input.Down = false }
+    if(e.key == "ArrowRight"){ input.Right = false }
 })
