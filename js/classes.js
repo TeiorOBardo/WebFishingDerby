@@ -107,11 +107,18 @@ class FrontWave extends Obj{ // tá hardcoded mas essa é era a forma mais fáci
 
 class Fish extends Obj
 {
+    startY = this.y;
     direction = 1;
     moveInterval = 4;
     limit = 300;
     border = 20;
     timer = 0;
+    startMouthX = 16;
+    mouthX = this.startMouthX;
+    mouthY = 5;
+    speed = 1;
+    score = 6;
+    isGrabbed = false;
 
     Update()
     {
@@ -124,8 +131,9 @@ class Fish extends Obj
             {
                 this.direction *= -1;
                 this.flipped = !this.flipped;
+                this.mouthX = this.startMouthX - this.mouthX;
             }
-            this.x += 1 * this.direction;
+            this.x += this.speed * this.direction;
         }
     }
 }
